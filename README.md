@@ -45,7 +45,11 @@ Ouvre l’URL affichée (souvent `http://localhost:5173`). Tu devrais voir l’i
    ```
 
 3. **Activer GitHub Pages**  
-   Repo → **Settings** → **Pages** → Source : **GitHub Actions** (workflow « Deploy on GitHub Pages »).
+   Repo → **Settings** → **Pages** → **Build and deployment** :
+   - Source : **Deploy from a branch**
+   - Branch : **gh-pages** → dossier **/ (root)** → Save.
+
+   La branche `gh-pages` est créée par le workflow au premier push sur `main`. Si elle n’existe pas encore, pousse d’abord le code puis reviens ici.
 
 4. **Secrets pour le build** (obligatoire pour que Supabase marche en prod)  
    Repo → **Settings** → **Secrets and variables** → **Actions** → **New repository secret** :
