@@ -8,6 +8,7 @@ function formatDateKey(d: Date): string {
 
 function App() {
   const [todayImage, setTodayImage] = useState<DailyImage | null>(null)
+  const [isFallback, setIsFallback] = useState(false) // true = on affiche la dernière image (pas celle du jour)
   const [revealed, setRevealed] = useState(false)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -24,27 +25,57 @@ function App() {
       setLoading(false)
     }, 12_000)
 
-    async function fetchToday() {
+    async function fetchImage() {
       setLoading(true)
       setError(null)
-      const { data, error: err } = await supabase
+      setIsFallback(false)
+
+      // 1) Essayer l'image du jour
+      const { data: todayData, error: todayErr } = await supabase
         .from('daily_images')
         .select('*')
         .eq('image_date', today)
         .maybeSingle()
 
       if (cancelled) return
-      clearTimeout(timeoutId)
-      if (err) {
-        setError(err.message)
+      if (todayErr) {
+        clearTimeout(timeoutId)
+        setError(todayErr.message)
         setLoading(false)
         return
       }
-      setTodayImage(data as DailyImage | null)
+
+      if (todayData) {
+        setTodayImage(todayData as DailyImage)
+        setLoading(false)
+        return
+      }
+
+      // 2) Sinon récupérer la dernière image en base (pour test / fallback)
+      const { data: lastData, error: lastErr } = await supabase
+        .from('daily_images')
+        .select('*')
+        .order('image_date', { ascending: false })
+        .limit(1)
+        .maybeSingle()
+
+      if (cancelled) return
+      clearTimeout(timeoutId)
+      if (lastErr) {
+        setError(lastErr.message)
+        setLoading(false)
+        return
+      }
+      if (lastData) {
+        setIsFallback(true)
+        setTodayImage(lastData as DailyImage)
+      } else {
+        setTodayImage(null)
+      }
       setLoading(false)
     }
 
-    fetchToday()
+    fetchImage()
     return () => {
       cancelled = true
       clearTimeout(timeoutId)
@@ -102,6 +133,9 @@ function App() {
       <header className="header">
         <h1>Image du jour</h1>
         <p className="date">{todayImage.image_date}</p>
+        {isFallback && (
+          <p className="fallback-badge">Dernière image en base (pas d’image pour aujourd’hui)</p>
+        )}
       </header>
 
       <main className="main">

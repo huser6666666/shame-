@@ -36,6 +36,13 @@ body {
   opacity: 0.8;
 }
 
+.fallback-badge {
+  font-size: 0.85rem;
+  opacity: 0.85;
+  margin-top: 0.25rem;
+  color: #a0c4ff;
+}
+
 .main {
   width: 100%;
   max-width: 640px;
