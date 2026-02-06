@@ -57,5 +57,10 @@ Ouvre l’URL affichée (souvent `http://localhost:5173`). Tu devrais voir l’i
    - `VITE_SUPABASE_ANON_KEY` = ta clé anon
 
 5. **URL du site**  
-   Après le premier push réussi : `https://TON_USER.github.io/shame-/`  
-   Si ton repo a un autre nom, change `base` dans `vite.config.ts` (ex. `base: '/mon-repo/'`).
+   Après le premier push réussi : `https://huser6666666.github.io/shame-/`  
+   Ouvre bien cette URL (avec `/shame-/` à la fin), pas la racine du compte.
+
+**Site tout blanc ?**
+- Vérifie que **Settings → Pages** utilise la branche **gh-pages** (pas `main`), dossier **/ (root)**.
+- Ouvre **https://huser6666666.github.io/shame-** (avec le nom du repo dans l’URL).
+- Si tu as ajouté les secrets Supabase, le workflow doit avoir refait un build après ; sinon ajoute-les puis relance le workflow (Actions → re-run).

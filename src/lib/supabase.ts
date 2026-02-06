@@ -1,15 +1,18 @@
-import { createClient } from '@supabase/supabase-js'
+import { createClient, type SupabaseClient } from '@supabase/supabase-js'
 
-const url = import.meta.env.VITE_SUPABASE_URL
-const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
+const url = import.meta.env.VITE_SUPABASE_URL ?? ''
+const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY ?? ''
 
-if (!url || !anonKey) {
-  console.warn(
-    'Supabase non configuré : crée un fichier .env avec VITE_SUPABASE_URL et VITE_SUPABASE_ANON_KEY (voir .env.example)'
-  )
+function createSupabaseClient(): SupabaseClient {
+  if (!url || !anonKey) {
+    console.warn(
+      'Supabase non configuré : .env avec VITE_SUPABASE_URL et VITE_SUPABASE_ANON_KEY (voir .env.example)'
+    )
+  }
+  return createClient(url || 'https://placeholder.supabase.co', anonKey || 'placeholder-key')
 }
 
-export const supabase = createClient(url ?? '', anonKey ?? '')
+export const supabase = createSupabaseClient()
 
 const BUCKET = 'daily-images'
 
