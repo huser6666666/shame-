@@ -3,6 +3,6 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
-  // Pour GitHub Pages : remplace par le nom de ton repo si différent
-  base: '/shame-/',
+  // Relatif = fonctionne quelle que soit l’URL (évite la page blanche sur GitHub Pages)
+  base: './',
 })
