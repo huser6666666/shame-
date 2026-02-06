@@ -16,6 +16,14 @@ function App() {
     const today = formatDateKey(new Date())
     let cancelled = false
 
+    const timeoutId = setTimeout(() => {
+      if (cancelled) return
+      setError(
+        'La connexion a pris trop de temps. Vérifie les secrets Supabase (repo → Settings → Secrets) et que la table daily_images existe.'
+      )
+      setLoading(false)
+    }, 12_000)
+
     async function fetchToday() {
       setLoading(true)
       setError(null)
@@ -26,6 +34,7 @@ function App() {
         .maybeSingle()
 
       if (cancelled) return
+      clearTimeout(timeoutId)
       if (err) {
         setError(err.message)
         setLoading(false)
@@ -36,7 +45,10 @@ function App() {
     }
 
     fetchToday()
-    return () => { cancelled = true }
+    return () => {
+      cancelled = true
+      clearTimeout(timeoutId)
+    }
   }, [])
 
   if (loading) {
@@ -45,7 +57,10 @@ function App() {
         <header className="header">
           <h1>Image du jour</h1>
         </header>
-        <div className="loading">Chargement…</div>
+        <div className="loading">
+          <p>Chargement de l’image du jour…</p>
+          <p className="loading-hint">Vérification de la base de données (Supabase).</p>
+        </div>
       </div>
     )
   }
