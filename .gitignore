@@ -1,0 +1,15 @@
+# Dependencies
+node_modules/
+
+# Build
+dist/
+
+# Env (ne pas pousser les clés Supabase)
+.env
+.env.local
+.env.*.local
+
+# IDE / OS
+.DS_Store
+*.log
+Thumbs.db
